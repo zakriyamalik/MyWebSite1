@@ -1,40 +1,48 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Data;
 using System.Data.SqlClient;
+
 namespace MyWebSite1.DAL
 {
     public class myDAL
     {
+
         private static readonly string connString =
-           System.Configuration.ConfigurationManager.ConnectionStrings["sqlCon1"].ConnectionString;
+    System.Configuration.ConfigurationManager.ConnectionStrings["sqlCon1"].ConnectionString;
+
+        private SqlConnection conn; // Declare SqlConnection at the class level
+
+        public myDAL()
+        {
+            conn = new SqlConnection(connString); // Initialize SqlConnection in the constructor
+        }
+
         public DataSet SelectItem()
         {
-            DataSet ds = new DataSet(); // Declare and instantiate a new dataset
-            SqlConnection con = new SqlConnection(connString); // Declare and instantiate a new SQL connection
-            con.Open(); // Open the SQL connection
-            SqlCommand cmd;
+            DataSet ds = new DataSet();
+
             try
             {
-                cmd = new SqlCommand("SELECT * FROM Items", con); // Instantiate SQL command cmd
-                cmd.CommandType = CommandType.Text; // Set the type of SQL command
-                using (SqlDataAdapter da = new SqlDataAdapter(cmd))
+                conn.Open(); // Open the connection
+                using (SqlCommand cmd = new SqlCommand("SELECT * FROM Items", conn))
                 {
-                    da.Fill(ds); // Add the result set returned from SqlCommand to ds
+                    cmd.CommandType = CommandType.Text;
+                    using (SqlDataAdapter da = new SqlDataAdapter(cmd))
+                    {
+                        da.Fill(ds);
+                    }
                 }
             }
             catch (SqlException ex)
             {
-                Console.WriteLine("SQL Error: " + ex.Message.ToString());
+                Console.WriteLine("SQL Error: " + ex.Message);
             }
             finally
             {
-                con.Close();
+                conn.Close(); // Close the connection in the finally block
             }
-            return ds; // Return the dataset
-        }
 
+            return ds;
+        }
     }
 }
