@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-
+using MyWebSite1.DAL;
 namespace MyWebSite1
 {
     public partial class Search : System.Web.UI.Page
@@ -13,5 +13,28 @@ namespace MyWebSite1
         {
 
         }
+        protected void Search_Button_Click(object sender, EventArgs e)
+        {
+            string Name = TextBox1.Text;
+            DataTable DT = new DataTable();
+            MyDAL objMyDal = new MyDAL(); // Asumiendo que "MyDAL" es el nombre de tu clase de acceso a datos
+
+            int found;
+            found = objMyDal.SearchItem(Name, ref DT);
+
+            if (found > 0)
+            {
+                ItemGrid.DataSource = DT;
+                ItemGrid.DataBind();
+                message.InnerHtml = Convert.ToString("Following Items Found");
+            }
+            else
+            {
+                message.InnerHtml = "Item Not Found";
+                ItemGrid.DataSource = null;
+                ItemGrid.DataBind();
+            }
+        }
+
     }
 }

@@ -43,5 +43,42 @@ namespace MyWebSite1.DAL
 
             return ds;
         }
+        public int SearchItem(string name, ref DataTable dt)
+        {
+            int found = 0;
+            DataSet ds = new DataSet();
+
+            using (SqlConnection con = new SqlConnection(connString))
+            {
+                con.Open();
+                using (SqlCommand cmd = new SqlCommand("searchitems", con)) // Assuming "searchitems" is the name of your stored procedure
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.Add("@Itemname", SqlDbType.VarChar, 15).Value = name;
+                    cmd.Parameters.Add("@found", SqlDbType.Int).Direction = ParameterDirection.Output;
+
+                    try
+                    {
+                        cmd.ExecuteNonQuery(); // Execute the stored procedure
+                        found = Convert.ToInt32(cmd.Parameters["@found"].Value); // Convert the output parameter to an integer
+                        if (found == 1)
+                        {
+                            using (SqlDataAdapter da = new SqlDataAdapter(cmd))
+                            {
+                                da.Fill(ds);
+                                dt = ds.Tables[0];
+                            }
+                        }
+                    }
+                    catch (SqlException ex)
+                    {
+                        Console.WriteLine("SQL Error: " + ex.Message);
+                    }
+                }
+            }
+
+            return found;
+        }
+
     }
 }
