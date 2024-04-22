@@ -7,8 +7,7 @@ namespace MyWebSite1.DAL
     public class myDAL
     {
 
-        private static readonly string connString =
-    System.Configuration.ConfigurationManager.ConnectionStrings["sqlCon1"].ConnectionString;
+        private static readonly string connString = System.Configuration.ConfigurationManager.ConnectionStrings["sqlCon1"].ConnectionString;
 
         private SqlConnection conn; // Declare SqlConnection at the class level
 
