@@ -4,6 +4,8 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using System.Data;
+using System.Data.SqlClient;
 using MyWebSite1.DAL;
 namespace MyWebSite1
 {
@@ -17,7 +19,7 @@ namespace MyWebSite1
         {
             string Name = TextBox1.Text;
             DataTable DT = new DataTable();
-            MyDAL objMyDal = new MyDAL(); // Asumiendo que "MyDAL" es el nombre de tu clase de acceso a datos
+            myDAL objMyDal = new myDAL(); // Asumiendo que "MyDAL" es el nombre de tu clase de acceso a datos
 
             int found;
             found = objMyDal.SearchItem(Name, ref DT);

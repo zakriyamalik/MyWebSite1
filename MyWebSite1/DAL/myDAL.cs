@@ -23,7 +23,8 @@ namespace MyWebSite1.DAL
             try
             {
                 conn.Open(); // Open the connection
-                using (SqlCommand cmd = new SqlCommand("SELECT * FROM Items", conn))
+
+                using (SqlCommand cmd = new SqlCommand("SELECT i.item_number AS ItemNumber, n.name AS ItemName, tu.total_units AS TotalUnits FROM    itemno i  INNER JOIN itemname n ON i.id = n.id   INNER JOIN totalunits tu ON i.id = tu.item_id;", conn))
                 {
                     cmd.CommandType = CommandType.Text;
                     using (SqlDataAdapter da = new SqlDataAdapter(cmd))
@@ -51,7 +52,7 @@ namespace MyWebSite1.DAL
             using (SqlConnection con = new SqlConnection(connString))
             {
                 con.Open();
-                using (SqlCommand cmd = new SqlCommand("searchitems", con)) // Assuming "searchitems" is the name of your stored procedure
+                using (SqlCommand cmd = new SqlCommand("spsearchitems", con)) // Assuming "searchitems" is the name of your stored procedure
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.Parameters.Add("@Itemname", SqlDbType.VarChar, 15).Value = name;
@@ -60,15 +61,15 @@ namespace MyWebSite1.DAL
                     try
                     {
                         cmd.ExecuteNonQuery(); // Execute the stored procedure
-                        found = Convert.ToInt32(cmd.Parameters["@found"].Value); // Convert the output parameter to an integer
-                        if (found == 1)
-                        {
-                            using (SqlDataAdapter da = new SqlDataAdapter(cmd))
-                            {
-                                da.Fill(ds);
-                                dt = ds.Tables[0];
-                            }
-                        }
+                        //found = Convert.ToInt32(cmd.Parameters["@found"].Value); // Convert the output parameter to an integer
+                        //if (found == 1)
+                        //{
+                        //    using (SqlDataAdapter da = new SqlDataAdapter(cmd))
+                        //    {
+                        //        da.Fill(ds);
+                        //        dt = ds.Tables[0];
+                        //    }
+                        //}
                     }
                     catch (SqlException ex)
                     {
